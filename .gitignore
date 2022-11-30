@@ -3,6 +3,7 @@
 *.ibc
 *.ttc
 *.ttm
+*.idr~
 
 build/
 interpret_app/
