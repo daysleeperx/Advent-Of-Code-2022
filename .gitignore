@@ -1,2 +1,10 @@
 *.ibc
 *.o
+*.ibc
+*.ttc
+*.ttm
+
+build/
+interpret_app/
+
+interpret

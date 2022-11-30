@@ -1,0 +1,12 @@
+package day0
+
+brief = "AoC 2022 Day 0: Test"
+authors = "Viktor Pavlov"
+
+modules = Test
+
+main = Test
+executable = interpret
+outputdir = "."
+
+depends = contrib
