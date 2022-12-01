@@ -21,7 +21,7 @@ parseInput : Parser InputType
 parseInput = sepBy1 parseCalories spaces
 
 mostCalories : InputType -> Nat
-mostCalories = foldl max Z . map sum
+mostCalories = foldl1 max . map sum
 
 topThreeElves : InputType -> List Nat
 topThreeElves = take 3 . sortBy (flip compare) . forget . map sum
