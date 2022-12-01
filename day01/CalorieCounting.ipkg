@@ -1,0 +1,12 @@
+package day1
+
+brief = "AoC 2022 Day 1: Calorie Counting"
+authors = "Viktor Pavlov"
+
+modules = CalorieCounting
+
+main = CalorieCounting
+executable = interpret
+outputdir = "."
+
+depends = contrib
