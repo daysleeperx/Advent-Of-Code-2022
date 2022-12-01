@@ -1,5 +1,7 @@
 # :christmas_tree: AoC 2022 :christmas_tree:
 
+[Hygen](https://www.hygen.io/) is used for template generation.
+
 Generate `.idr` and `.ipkg` templates by running
 
 ```bash
