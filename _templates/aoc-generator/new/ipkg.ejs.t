@@ -1,5 +1,5 @@
 ---
-to: day0<%=day%>/<%=name%>.ipkg
+to: "<%= day ? `day${String(day).padStart(2, '0')}/${name}.ipkg` : null %>"
 ---
 package day<%=day%>
 

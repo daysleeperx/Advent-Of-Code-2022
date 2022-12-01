@@ -1,5 +1,5 @@
 ---
-to: day0<%=day%>/<%=name%>.idr
+to: "<%= day ? `day${String(day).padStart(2, '0')}/${name}.idr` : null %>"
 ---
 -- Day <%=day%>: <%=name%>
 
