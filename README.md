@@ -1,4 +1,4 @@
-# :evergreen_tree: AoC 2022 :evergreen_tree:
+# :christmas_tree: AoC 2022 :christmas_tree:
 
 Generate `.idr` and `.ipkg` templates by running
 
