@@ -1,6 +1,7 @@
 # AoC 2022
 
 Generate `.idr` and `.ipkg` templates by running
+
 ```bash
 hygen aoc-generator new <name> --day <day>
 // e.g hygen aoc-generator new CalorieCounting --day 1
