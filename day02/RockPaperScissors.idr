@@ -22,13 +22,12 @@ implementation Eq Hand where
     (==) x y = show x == show y
 
 implementation Ord Hand where
-    compare Rock Paper = LT
-    compare Rock Scissors = GT
-    compare Paper Rock = GT
-    compare Paper Scissors = LT
-    compare Scissors Rock = LT
-    compare Scissors Paper = GT
-    compare _ _ = EQ
+    compare x y with (x == y)
+        compare x y | True = EQ
+        compare Rock Paper | _ = LT
+        compare Paper Scissors | _ = LT
+        compare Scissors Rock | _ = LT
+        _ | _ = GT
 
 Round : Type
 Round = (Hand, Hand)
