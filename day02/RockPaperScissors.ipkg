@@ -1,0 +1,12 @@
+package day2
+
+brief = "AoC 2022 Day 2: Rock Paper Scissors"
+authors = "Viktor Pavlov"
+
+modules = RockPaperScissors
+
+main = RockPaperScissors
+executable = interpret
+outputdir = "."
+
+depends = contrib
