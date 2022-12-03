@@ -1,0 +1,12 @@
+package day3
+
+brief = "AoC 2022 Day 3: Rucksack Reorganization"
+authors = "Viktor Pavlov"
+
+modules = RucksackReorganization
+
+main = RucksackReorganization
+executable = interpret
+outputdir = "."
+
+depends = contrib

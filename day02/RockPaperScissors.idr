@@ -51,14 +51,17 @@ scoreHand Rock = 1
 scoreHand Paper = 2
 scoreHand Scissors = 3
 
-looseWin : Nat -> Hand
-looseWin idx = index idx $ cycle [Rock, Paper, Scissors]
-
 scoreRound : Round -> Nat
 scoreRound (x, y) with (compare x y)
   _ | LT = scoreHand y + 6
   _ | EQ = scoreHand y + 3
   _ | GT = scoreHand y + 0
+
+totalScore : InputType -> Nat
+totalScore = sum . map scoreRound
+
+looseWin : Nat -> Hand
+looseWin idx = index idx $ cycle [Rock, Paper, Scissors]
 
 scoreRound' : Round -> Nat
 scoreRound' (x, y) = (scoreRound . (x, ) . looseWin . choose) y
@@ -70,8 +73,6 @@ scoreRound' (x, y) = (scoreRound . (x, ) . looseWin . choose) y
           _ | _ = Z
         choose Scissors = scoreHand x
 
-totalScore : InputType -> Nat
-totalScore = sum . map scoreRound
 
 totalScore' : InputType -> Nat
 totalScore' = sum . map scoreRound'
