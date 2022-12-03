@@ -39,7 +39,7 @@ totalScore : InputType -> Int
 totalScore = sum . map priority . concat . map inBothCompartments
 
 chunks : Nat -> List a -> List (List a)
-chunks k = takeBefore isNil . unfoldr (splitAt k)
+chunks n = takeBefore isNil . unfoldr (splitAt n)
 
 totalScore' : InputType -> Int
 totalScore' = sum . map priority . concat . map (nub . intersectAll) . chunks 3
