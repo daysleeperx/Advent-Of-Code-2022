@@ -33,7 +33,7 @@ splitRucksack : Rucksack -> (Rucksack, Rucksack)
 splitRucksack xs = splitAt (divNatNZ (length xs) 2 SIsNonZero) xs
 
 inBothCompartments : Rucksack -> Rucksack
-inBothCompartments = nub . (uncurry intersect) . splitRucksack
+inBothCompartments = nub . uncurry intersect . splitRucksack
 
 totalScore : InputType -> Int
 totalScore = sum . map priority . concat . map inBothCompartments
