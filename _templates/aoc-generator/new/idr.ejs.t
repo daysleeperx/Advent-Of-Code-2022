@@ -11,6 +11,13 @@ import Data.List
 import Data.String.Parser
 import Debug.Trace
 
+
+InputType : Type
+InputType = ?InputType_rhs
+
+parseInput : Parser InputType
+parseInput = ?parseInput_rhs
+
 main : IO ()
 main = do
     args <- getArgs
