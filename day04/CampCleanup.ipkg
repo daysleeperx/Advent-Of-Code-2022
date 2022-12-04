@@ -1,0 +1,12 @@
+package day4
+
+brief = "AoC 2022 Day 4: Camp Cleanup"
+authors = "Viktor Pavlov"
+
+modules = CampCleanup
+
+main = CampCleanup
+executable = interpret
+outputdir = "."
+
+depends = contrib

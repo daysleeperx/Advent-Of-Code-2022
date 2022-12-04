@@ -1,5 +1,6 @@
 ---
 to: "<%= day ? `day${String(day).padStart(2, '0')}/${name}.idr` : null %>"
+sh: cd <%= cwd %>/<%= `day${String(day).padStart(2, '0')}` %> && touch input.txt && touch test.txt
 ---
 -- Day <%=day%>: <%=name%>
 
