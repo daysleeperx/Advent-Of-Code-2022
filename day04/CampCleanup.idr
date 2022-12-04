@@ -47,8 +47,11 @@ validateSection ((x, z), (y, w)) = do
 validateInput : List SectionAssignment -> Maybe InputType
 validateInput = traverse validateSection
 
+inBounds : Nat -> Range' -> Bool
+inBounds n (MkRange from to _) = n >= from && n <= to
+
 contains' : Range' -> Range' -> Bool
-contains' (MkRange f1 t1 _) (MkRange f2 t2 _) = (f1 >= f2 && f1 <= t2 && t1 <= t2 && t1 >= f2)
+contains' (MkRange from to _) y = inBounds from y && inBounds to y
 
 contains : Range' -> Range' -> Bool
 contains x y = contains' x y || (flip contains') x y
@@ -57,7 +60,7 @@ countContaining : InputType -> Nat
 countContaining = length . filter (uncurry contains)
 
 overlaps' : Range' -> Range' -> Bool
-overlaps' (MkRange f1 t1 _) (MkRange f2 t2 _) = (f1 >= f2 && f1 <= t2) || (t1 >= f2 && t1 <= t2)
+overlaps' (MkRange from to _) y = inBounds from y || inBounds to y
 
 overlaps : Range' -> Range' -> Bool
 overlaps x y = overlaps' x y || (flip overlaps') x y
