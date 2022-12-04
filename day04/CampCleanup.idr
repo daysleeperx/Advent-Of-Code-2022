@@ -63,7 +63,7 @@ overlaps : Range' -> Range' -> Bool
 overlaps x y = overlaps' x y || (flip overlaps') x y
 
 countOverlapping : InputType -> Nat
-countOverlapping = length . filter (\s => (uncurry overlaps) s || (uncurry contains) s)
+countOverlapping = length . filter (uncurry overlaps)
 
 main : IO ()
 main = do
