@@ -1,0 +1,12 @@
+package day5
+
+brief = "AoC 2022 Day 5: Supply Stacks"
+authors = "Viktor Pavlov"
+
+modules = SupplyStacks
+
+main = SupplyStacks
+executable = interpret
+outputdir = "."
+
+depends = contrib
