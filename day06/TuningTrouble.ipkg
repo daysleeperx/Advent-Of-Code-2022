@@ -1,0 +1,12 @@
+package day6
+
+brief = "AoC 2022 Day 6: Tuning Trouble"
+authors = "Viktor Pavlov"
+
+modules = TuningTrouble
+
+main = TuningTrouble
+executable = interpret
+outputdir = "."
+
+depends = contrib
