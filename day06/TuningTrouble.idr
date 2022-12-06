@@ -16,7 +16,7 @@ parseInput : Parser InputType
 parseInput = many letter
 
 windowed : Nat -> List a -> List $ List a
-windowed n = transpose . take n . tails
+windowed n = takeBefore isNil . unfoldr (\xs => (take n xs, drop 1 xs))
 
 findPacketStart : (xs : List (List Char)) -> Maybe (Fin (length xs))
 findPacketStart = findIndex (\xs => nub xs == xs)
