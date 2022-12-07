@@ -1,0 +1,12 @@
+package day7
+
+brief = "AoC 2022 Day 7: No Space Left On Device"
+authors = "Viktor Pavlov"
+
+modules = NoSpaceLeftOnDevice
+
+main = NoSpaceLeftOnDevice
+executable = interpret
+outputdir = "."
+
+depends = contrib
