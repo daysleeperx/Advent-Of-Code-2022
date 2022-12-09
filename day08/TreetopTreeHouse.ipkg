@@ -1,0 +1,12 @@
+package day8
+
+brief = "AoC 2022 Day 8: Treetop Tree House"
+authors = "Viktor Pavlov"
+
+modules = TreetopTreeHouse
+
+main = TreetopTreeHouse
+executable = interpret
+outputdir = "."
+
+depends = contrib
