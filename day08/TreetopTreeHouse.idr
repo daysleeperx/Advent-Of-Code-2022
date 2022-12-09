@@ -93,19 +93,26 @@ countVisible = length . filter isVisible . toList . Data.Vect.concat . setVisibl
 vectToList : Vect n a -> List a
 vectToList xs = foldl snoc [] xs
 
-getIndices : (len : Nat) -> List (Nat, Nat)
-getIndices Z = []
-getIndices (S len) = [(row, col) | row <- [0..len], col <- [0..len]]
+getCoords : (len : Nat) -> List (Nat, Nat)
+getCoords Z = []
+getCoords (S len) = [(row, col) | row <- [0..len], col <- [0..len]]
 
-directions : {len : Nat} -> (row : Nat) -> (col : Nat) -> Forest len -> List (List Tree)
+coordToFins : (len : Nat) -> (Nat, Nat) -> Maybe (Fin len, Fin len)
+coordToFins len (row, col) = do
+    row' <- natToFin row len
+    col' <- natToFin col len
+    pure (row', col')
+
+coordsToFins : (len : Nat) -> (coords : List (Nat, Nat)) -> List (Fin len, Fin len)
+coordsToFins len = catMaybes . map (coordToFins len)
+
+directions : {len : Nat} -> (row : Fin len) -> (col : Fin len) -> Forest len -> List (List Tree)
 directions row col forest = 
     let
-        Just r = natToFin row len | Nothing => []
-        Just c = natToFin col len | Nothing => []
-        horizontal = vectToList $ index r forest
-        vertical = vectToList $ index c $ transpose forest
-        (left, right) = splitAt col horizontal
-        (up, down) = splitAt row vertical
+        horizontal = vectToList $ index row forest
+        vertical = vectToList $ index col $ transpose forest
+        (left, right) = splitAt (finToNat col) horizontal
+        (up, down) = splitAt (finToNat row) vertical
     in
         [reverse left, drop 1 right, reverse up, drop 1 down]
 
@@ -119,18 +126,16 @@ takeWhile' f = unfoldr take'
 getDistance : (h: Nat) -> List Tree -> Nat
 getDistance h = length . takeWhile' ( < h) . map height
 
-scenicScore : {len : Nat} -> Forest len -> (row : Nat) -> (col : Nat) -> Nat
+scenicScore : {len : Nat} -> Forest len -> (row : Fin len) -> (col : Fin len) -> Nat
 scenicScore forest row col = 
     let
-        Just r = natToFin row len | Nothing => Z
-        Just c = natToFin col len | Nothing => Z
         dirs = directions row col forest
-        h = height (index c $ index r forest) 
+        h = height (index col $ index row forest) 
     in
         foldl (*) 1 $ map (getDistance h) dirs
 
 getMaxScenicScore : {len : Nat} -> Forest len -> Nat
-getMaxScenicScore forest = foldl max Z $ map (uncurry (scenicScore forest)) $ getIndices len
+getMaxScenicScore forest = foldl max Z $ map (uncurry (scenicScore forest)) $ coordsToFins len (getCoords len)
 
 main : IO ()
 main = do
