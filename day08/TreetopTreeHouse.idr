@@ -1,5 +1,7 @@
 -- Day 8: Treetop Tree House
 
+{-- Solution based on https://work.njae.me.uk/2022/12/08/advent-of-code-2022-day-8/ --}
+
 module TreetopTreeHouse
 import System
 import System.File
@@ -19,8 +21,11 @@ Grid len a = Vect len $ Vect len a
 Tree : Type
 Tree = (Nat, Bool)
 
+height : Tree -> Nat
+height = fst
+
 isVisible : Tree -> Bool
-isVisible (_, visible) = visible
+isVisible = snd
 
 ForestRow : Type
 ForestRow = (len ** Vect len Tree)
@@ -80,10 +85,52 @@ iterateN' Z _ = id
 iterateN' (S n) f = f . iterateN' n f
 
 setVisibleAllDirs : {len : Nat} -> (grid : Forest len) -> Forest len
-setVisibleAllDirs = iterateN' 4 (rotateGrid . setVisibleGrid)
+setVisibleAllDirs = iterateN' 4 $ rotateGrid . setVisibleGrid
 
 countVisible : {len : Nat} -> Forest len -> Nat
 countVisible = length . filter isVisible . toList . Data.Vect.concat . setVisibleAllDirs
+
+vectToList : Vect n a -> List a
+vectToList xs = foldl snoc [] xs
+
+getIndices : (len : Nat) -> List (Nat, Nat)
+getIndices Z = []
+getIndices (S len) = [(row, col) | row <- [0..len], col <- [0..len]]
+
+directions : {len : Nat} -> (row : Nat) -> (col : Nat) -> Forest len -> List (List Tree)
+directions row col forest = 
+    let
+        Just r = natToFin row len | Nothing => []
+        Just c = natToFin col len | Nothing => []
+        horizontal = vectToList $ index r forest
+        vertical = vectToList $ index c $ transpose forest
+        (left, right) = splitAt col horizontal
+        (up, down) = splitAt row vertical
+    in
+        [reverse left, drop 1 right, reverse up, drop 1 down]
+
+takeWhile' : (a -> Bool) -> List a -> List a
+takeWhile' f = unfoldr take' 
+   where
+       take' :  List a -> Maybe (a, List a)
+       take' [] = Nothing
+       take' (x :: xs) = if (f x) then Just (x, xs) else Just (x, [])
+
+getDistance : (h: Nat) -> List Tree -> Nat
+getDistance h = length . takeWhile' ( < h) . map height
+
+scenicScore : {len : Nat} -> Forest len -> (row : Nat) -> (col : Nat) -> Nat
+scenicScore forest row col = 
+    let
+        Just r = natToFin row len | Nothing => Z
+        Just c = natToFin col len | Nothing => Z
+        dirs = directions row col forest
+        h = height (index c $ index r forest) 
+    in
+        foldl (*) 1 $ map (getDistance h) dirs
+
+getMaxScenicScore : {len : Nat} -> Forest len -> Nat
+getMaxScenicScore forest = foldl max Z $ map (uncurry (scenicScore forest)) $ getIndices len
 
 main : IO ()
 main = do
@@ -91,5 +138,6 @@ main = do
     let (file :: _) = drop 1 args | [] => printLn "No file provided!"
     (Right symbols) <- readFile file | (Left error) => printLn error
     let Right (input, _) = parse parseInput symbols | Left error => printLn error
-    let Just (_ ** grid) = validateInput input | Nothing => printLn "Grid is not well formed!"
-    printLn $ countVisible grid
+    let Just (_ ** forest) = validateInput input | Nothing => printLn "Forest is not well formed!"
+    printLn $ countVisible forest
+    printLn $ getMaxScenicScore forest
