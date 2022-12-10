@@ -108,15 +108,12 @@ validateProcedure n (Move c from to) = do
 validateProcedures : (n : Nat) -> List Procedure -> Maybe $ List $ Procedure' n
 validateProcedures n = traverse $ validateProcedure n
 
-vectToList : Vect n a -> List a
-vectToList xs = foldl snoc [] xs
-
 validateInput : InputType -> Maybe InputType'
 validateInput (cargo, procedures) = do
     normalized <- fromList $ init cargo -- FIXME: parser returns empty list as last element
     (n ** cargo') <- validateCargo normalized
     procedures <- validateProcedures (S n) procedures
-    let stacks = (map (catMaybes . vectToList) . transpose) (Data.Vect.fromList $ forget cargo')
+    let stacks = (map (catMaybes . toList) . transpose) (Data.Vect.fromList $ forget cargo')
     pure $ MkInputType n stacks procedures
 
 {-- Solution --}

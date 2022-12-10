@@ -1,0 +1,12 @@
+package day9
+
+brief = "AoC 2022 Day 9: Rope Bridge"
+authors = "Viktor Pavlov"
+
+modules = RopeBridge
+
+main = RopeBridge
+executable = interpret
+outputdir = "."
+
+depends = contrib

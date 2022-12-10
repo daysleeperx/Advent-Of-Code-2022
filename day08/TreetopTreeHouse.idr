@@ -90,9 +90,6 @@ setVisibleAllDirs = iterateN' 4 $ rotateGrid . setVisibleGrid
 countVisible : {len : Nat} -> Forest len -> Nat
 countVisible = length . filter isVisible . toList . Data.Vect.concat . setVisibleAllDirs
 
-vectToList : Vect n a -> List a
-vectToList xs = foldl snoc [] xs
-
 getCoords : (len : Nat) -> List (Nat, Nat)
 getCoords Z = []
 getCoords (S len) = [(row, col) | row <- [0..len], col <- [0..len]]
@@ -109,8 +106,8 @@ coordsToFins len = catMaybes . map (coordToFins len)
 directions : {len : Nat} -> (row : Fin len) -> (col : Fin len) -> Forest len -> List (List Tree)
 directions row col forest = 
     let
-        horizontal = vectToList $ index row forest
-        vertical = vectToList $ index col $ transpose forest
+        horizontal = toList $ index row forest
+        vertical = toList $ index col $ transpose forest
         (left, right) = splitAt (finToNat col) horizontal
         (up, down) = splitAt (finToNat row) vertical
     in
