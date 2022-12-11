@@ -1,0 +1,12 @@
+package day10
+
+brief = "AoC 2022 Day 10: Cathode Ray Tube"
+authors = "Viktor Pavlov"
+
+modules = CathodeRayTube
+
+main = CathodeRayTube
+executable = interpret
+outputdir = "."
+
+depends = contrib
