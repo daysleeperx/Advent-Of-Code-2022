@@ -1,0 +1,12 @@
+package day11
+
+brief = "AoC 2022 Day 11: Monkey In The Middle"
+authors = "Viktor Pavlov"
+
+modules = MonkeyInTheMiddle
+
+main = MonkeyInTheMiddle
+executable = interpret
+outputdir = "."
+
+depends = contrib
