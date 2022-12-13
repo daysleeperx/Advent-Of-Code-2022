@@ -1,0 +1,12 @@
+package day12
+
+brief = "AoC 2022 Day 12: Hill Climbing Algorithm"
+authors = "Viktor Pavlov"
+
+modules = HillClimbingAlgorithm
+
+main = HillClimbingAlgorithm
+executable = interpret
+outputdir = "."
+
+depends = contrib
