@@ -1,0 +1,12 @@
+package day13
+
+brief = "AoC 2022 Day 13: Distress Signal"
+authors = "Viktor Pavlov"
+
+modules = DistressSignal
+
+main = DistressSignal
+executable = interpret
+outputdir = "."
+
+depends = contrib
