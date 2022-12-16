@@ -1,0 +1,12 @@
+package day14
+
+brief = "AoC 2022 Day 14: Regolith Reservoir"
+authors = "Viktor Pavlov"
+
+modules = RegolithReservoir
+
+main = RegolithReservoir
+executable = interpret
+outputdir = "."
+
+depends = contrib
