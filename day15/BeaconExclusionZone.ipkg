@@ -1,0 +1,12 @@
+package day15
+
+brief = "AoC 2022 Day 15: BeaconExclusionZone"
+authors = "Viktor Pavlov"
+
+modules = BeaconExclusionZone
+
+main = BeaconExclusionZone
+executable = interpret
+outputdir = "."
+
+depends = contrib

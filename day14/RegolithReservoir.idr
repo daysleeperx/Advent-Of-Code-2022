@@ -87,9 +87,9 @@ maxY = foldl max (-2147483648) . map (snd . fst) . filter ((== Rock) . snd) . Da
 data Dir = Down | Left | Right
 
 canMove : Dir -> Coord -> Cave -> Bool
-canMove Down (x, y) cave = not $ contains ((x, y + 1), Rock) cave || contains ((x, y + 1), Sand) cave
-canMove Left (x, y) cave = not $ contains ((x - 1, y + 1), Rock) cave || contains ((x - 1, y + 1), Sand) cave
-canMove Right (x, y) cave = not $ contains ((x + 1, y + 1), Rock) cave || contains ((x + 1, y + 1), Sand) cave
+canMove Down (x, y) cave = not $ (((x, y + 1), Rock) `contains` cave) || (((x, y + 1), Sand) `contains` cave)
+canMove Left (x, y) cave = not $ (((x - 1, y + 1), Rock) `contains` cave) || (((x - 1, y + 1), Sand) `contains` cave)
+canMove Right (x, y) cave = not $ (((x + 1, y + 1), Rock) `contains` cave) || (((x + 1, y + 1), Sand) `contains` cave)
 
 simulate : Integer -> Coord -> Cave -> Coord
 simulate maxY (x, y) cave =  
