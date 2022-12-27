@@ -69,8 +69,8 @@ parseProcedures = sepBy parseProcedure $ char '\n'
 parseInput : Parser InputType
 parseInput = do
     cargo <- parseCargo
-    _ <- skip (alternating spaces1 natural)
-    _ <- skip spaces
+    skip (alternating spaces1 natural)
+    skip spaces
     procedures <- parseProcedures
     pure (cargo, procedures)
 

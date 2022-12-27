@@ -1,6 +1,6 @@
 package day15
 
-brief = "AoC 2022 Day 15: BeaconExclusionZone"
+brief = "AoC 2022 Day 15: Beacon Exclusion Zone"
 authors = "Viktor Pavlov"
 
 modules = BeaconExclusionZone
