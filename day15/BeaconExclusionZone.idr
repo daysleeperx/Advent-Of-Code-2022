@@ -74,13 +74,15 @@ implementation Ord (BeaconRange maxLimit) where
     compare (MkRange s1 _ _ _) (MkRange s2 _ _ _) = compare s1 s2
 
 extractRange: (maxLimit : Nat) -> Integer -> Sensor -> Maybe $ BeaconRange maxLimit
-extractRange maxLimit y' (MkSensor (x, y) _ radius) = do
-    let d = radius - (abs (y' - y))
-    let start = integerToNat $ x - d
-    let end = min (integerToNat $ x + d) maxLimit
-    let Yes valid = isLTE start end | No _ => Nothing
-    let Yes bounded = isLTE end maxLimit | No _ => Nothing
-    pure $ MkRange start end valid bounded
+extractRange maxLimit y' (MkSensor (x, y) _ radius) = 
+    let
+        d = radius - (abs (y' - y))
+        start = integerToNat $ x - d
+        end = min (integerToNat $ x + d) maxLimit
+        (Yes valid) = isLTE start end | No _ => Nothing
+        (Yes bounded) = isLTE end maxLimit | No _ => Nothing
+    in
+        pure $ MkRange start end valid bounded
 
 mergeRanges : {maxLimit : Nat} -> List (BeaconRange maxLimit) -> List $ BeaconRange maxLimit
 mergeRanges xs = do
