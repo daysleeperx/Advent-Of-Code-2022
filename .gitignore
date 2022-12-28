@@ -4,9 +4,11 @@
 *.ttc
 *.ttm
 *.idr~
+*.hs
 
 build/
 interpret_app/
+dist-newstyle/
 
 interpret
 test.txt

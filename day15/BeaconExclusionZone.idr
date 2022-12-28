@@ -4,6 +4,8 @@ module BeaconExclusionZone
 import System
 import System.File
 import Data.List
+import Data.List1
+import Data.Nat
 import Data.String.Parser
 import Debug.Trace
 
@@ -56,21 +58,53 @@ countBeaconExclusionZoneRow y inp =
     in
         length . filter (\x => any (\s => inRange s (x, y)) inp) $ [minX..maxX]
 
-sensorOutsideBorder : Sensor -> List Coord
-sensorOutsideBorder (MkSensor (x, y) _ radius) =
-    let
-        d = radius + 1
-        topLeft = [(x, y) | (x, y) <- zip [x - d..x] [y..y + d], x >= 0, y >= 0, x <= 4000000, y <= 4000000]
-        topRight = [(x, y) | (x, y) <- zip [x + d..x] [y..y + d], x >= 0, y >= 0, x <= 4000000, y <= 4000000]
-        bottomLeft = [(x, y) | (x, y) <- zip [x - d..x] [y..y - d], x >= 0, y >= 0, x <= 4000000, y <= 4000000]
-        bottomRight = [(x, y) | (x, y) <- zip [x + d..x] [y..y - d], x >= 0, y >= 0, x <= 4000000, y <= 4000000]
-    in
-        nub $ topLeft ++ topRight ++ bottomLeft ++ bottomRight
+record BeaconRange (maxLimit : Nat) where
+    constructor MkRange
+    start, end : Nat
+    valid : LTE start end
+    bounded: LTE end maxLimit
 
-findBeacon : InputType -> Maybe Integer
-findBeacon xs = do
-        (x', y') <- head' . filter (\pos => all (not . (flip inRange) pos) xs) $ (nub . concatMap sensorOutsideBorder) xs
-        pure $ x' * 4000000 + y'
+implementation Show (BeaconRange maxLimit) where
+    show (MkRange start end _ _) = "(start=\{show start}, end=\{show end})"
+
+implementation Eq (BeaconRange maxLimit) where
+    (==) (MkRange s1 e1 _ _) (MkRange s2 e2 _ _) = s1 == s2 && e1 == e2
+
+implementation Ord (BeaconRange maxLimit) where
+    compare (MkRange s1 _ _ _) (MkRange s2 _ _ _) = compare s1 s2
+
+extractRange: (maxLimit : Nat) -> Integer -> Sensor -> Maybe $ BeaconRange maxLimit
+extractRange maxLimit y' (MkSensor (x, y) _ radius) = do
+    let d = radius - (abs (y' - y))
+    let start = integerToNat $ x - d
+    let end = min (integerToNat $ x + d) maxLimit
+    let Yes valid = isLTE start end | No _ => Nothing
+    let Yes bounded = isLTE end maxLimit | No _ => Nothing
+    pure $ MkRange start end valid bounded
+
+mergeRanges : {maxLimit : Nat} -> List (BeaconRange maxLimit) -> List $ BeaconRange maxLimit
+mergeRanges xs = do
+    let sorted = sort xs
+    let Just (MkRange start end v b) = head' sorted | Nothing => []
+    forget (foldl merge ((MkRange start end v b) ::: []) $ drop 1 sorted)
+        where
+            merge : List1 (BeaconRange maxLimit) -> BeaconRange maxLimit -> List1 $ BeaconRange maxLimit
+            merge acc (MkRange start end valid bounded) =
+                let
+                    (MkRange start' end' _ _) = head acc
+                    Yes overlapsStart = isLTE start (S end') | No _ => (MkRange start end valid bounded) ::: forget acc
+                    end'' = max end end'
+                    (Yes valid) = isLTE start' end'' | No _ => acc
+                    (Yes bounded) = isLTE end'' maxLimit | No _ => acc
+                in
+                    (MkRange start' end'' valid bounded) ::: (tail acc)
+
+tuningFreq : (maxLimit : Nat) -> InputType -> Maybe Integer
+tuningFreq maxLimit xs = do
+    let rowRanges = map (\row => ((row, ) . reverse . mergeRanges . catMaybes . map (extractRange maxLimit row)) xs) [0..cast maxLimit]
+    (y, ranges) <- find ((== 2) . length . snd) rowRanges
+    (MkRange _ x _ _) <- head' ranges
+    (pure . cast) $ (S x) * 4000000 + (cast y)
 
 main : IO ()
 main = do
@@ -78,5 +112,4 @@ main = do
     let (file :: _) = drop 1 args | [] => printLn "No file provided!"
     (Right symbols) <- readFile file | (Left error) => printLn error
     let Right (input, _) = parse parseInput symbols | Left error => printLn error
-    printLn $ countBeaconExclusionZoneRow 2000000 input
-    printLn $ findBeacon input
+    printLn $ tuningFreq 4000000 input
